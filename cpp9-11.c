@@ -128,55 +128,79 @@
 // pr(a,b,arr1);
 //     return 0;
 // }
-void input(double arr[][5],int a,int b);
-void ave1(double arr[][5],int a,int b,int*sum);
-void avesum(double arr[][5],int a,int b,int *p1);
-void maxfunc(double arr[][5],int a,int b,int *p2);
-void output(int sum[3],int allsum,int max);
-int main()
-{
-    double arr[3][5];
-    int sum[3]={0,0,0,};
-    int allsum=0;
-    int *p1=&allsum;
-    int max=0;
-    int*p2=&max;
-    input(arr[0],3,5);
-    ave1(arr[0],3,5,sum);
-    avesum(arr[0],3,5,p1);
-    maxfunc(arr[0],3,5,p2);
-    output(sum[3],allsum,max); 
-    return 0;
-}
-void input(double arr[][5],int a,int b)
-{
-    for(int i=0;i<a;i++)
-    for(int j=0;j<b;j++)
-    scanf("%d",&arr[i][j]);
-}
-void ave1(double arr[][5],int a,int b,int *sum)
-{for(int i=0;i<a;i++)
-    for(int j=0;j,b;j++)
-    sum[i]+=arr[i][j];
-}
-void avesum(double arr[][5],int a,int b,int* p1)
-{
-for(int i=0;i<a;i++)
-for(int j=0;j<b;j++)
-*p1+=arr[i][j];
-}
-void maxfunc(double arr[][5],int a,int b,int*p2)
-{
-  for(int i=0;i<a;i++)
-  for(int j=0;j<b;j++)
-     if(arr[i][j]>*p2)
-        *p2=arr[i][j];
-}
-void output(int sum[3],int allsum,int max)
-{
-   for(int i=0;i<3;i++)
-   printf("%d",sum[i]/5);
-printf("\n");
-printf("%d",allsum/15);
-printf("%d",max);
-}
+//13.
+// void input(double arr[][5],int a,int b);
+// void ave1(double arr[][5],int a,int b,int*sum);
+// void avesum(double arr[][5],int a,int b,int *p1);
+// void maxfunc(double arr[][5],int a,int b,int *p2);
+// void output(int *sum,int *p1,int *p2);
+// int main()
+// {
+//     double arr[3][5];
+//     int sum[3]={0,0,0,};
+//     int allsum=0;
+//     int *p1=&allsum;
+//     int max=0;
+//     int*p2=&max;
+//     input(arr[0],3,5);
+//     ave1(arr[0],3,5,sum);
+//     avesum(arr[0],3,5,p1);
+//     maxfunc(arr[0],3,5,p2);
+//     output(sum,allsum,max); 
+//     return 0;
+// }
+// void input(double arr[][5],int a,int b)
+// {
+//     for(int i=0;i<a;i++)
+//     for(int j=0;j<b;j++)
+//     scanf("%d",&arr[i][j]);
+// }
+// void ave1(double arr[][5],int a,int b,int *sum)
+// {for(int i=0;i<a;i++)
+//     for(int j=0;j<b;j++)
+//     sum[i]=sum[i]+arr[i][j];
+// }
+// void avesum(double arr[][5],int a,int b,int* p1)
+// {
+// for(int i=0;i<a;i++)
+// for(int j=0;j<b;j++)
+// *p1+=arr[i][j];
+// }
+// void maxfunc(double arr[][5],int a,int b,int*p2)
+// {
+//   for(int i=0;i<a;i++)
+//   for(int j=0;j<b;j++)
+//      if(arr[i][j]>*p2)
+//         *p2=arr[i][j]; 
+// }
+// void output(int *sum,int *p1,int *p2)
+// {
+//    for(int i=0;i<3;i++)
+//    printf("%d ",sum[i]/5);
+// printf("\n");
+// printf("%d",*p1/15);
+// printf("\n");
+// printf("%d",*p2);
+// }
+//字符串字面量
+// int main()
+// {
+//   printf("%s %p %c","wtf","howcani",*"forget");
+//     return 0;
+// }
+// int main()             
+// {
+//     char ch[20];
+//     gets(ch);
+//     puts(ch);
+//     return 0;
+// }
+//gets,puts,fgets,fputs函数实践
+// int main()
+// {
+//     char ch[5];
+//     while(fgets(ch,5,stdin)!=NULL&&ch[0]!="12345")
+//     fputs(ch,stdout);
+// fputs(ch,stdout);
+//     return 0;
+// }
