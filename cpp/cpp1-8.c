@@ -377,15 +377,6 @@
 //    printf("%p", pdate);
 //    return 0;
 //    }
-// 
-// 
-//  
-// 
-// 
-// 
-// 
-// 
-// 
 // 打印多少个=
 //int main()
 //{
@@ -396,8 +387,6 @@
 //		putchar('=');
 //	} while (i >=0);
 //}
-//交换变量值的五种方法
-//1
 //int main()
 //{
 //	int a = 1;
@@ -458,41 +447,39 @@
 //	printf("%d %d", a, b);
 //	return 0;
 //}
-// 
-// 
 //4
-int count = 100;
-int process(int num){
-while(1)
-switch (num) {
-case 0:
-	num = num ^ 99 ^ 88 ^ 99 ^ 88 | 10;
-case 15:
-	num = num ^ 5;
-	break;
-case 8:
-	num = 1 << num;
-	num -= num++;
-	break;
-case 10:
-	num = num + -3;
-	count = count + num++;
-	break;
-case 2:
-	--num;
-case 5:
-	return (1 << num);
-default:
-	num = num & 1 ? num + 1 : num;
-}
-}
-int main()
-{
-	int start = 0;
-	int answer = process(start);
-	printf("answer==%d\n", answer);
-	return 0;
-}
+// int count = 100;
+// int process(int num){
+// while(1)
+// switch (num) {
+// case 0:
+// 	num = num ^ 99 ^ 88 ^ 99 ^ 88 | 10;
+// case 15:
+// 	num = num ^ 5;
+// 	break;
+// case 8:
+// 	num = 1 << num;
+// 	num -= num++;
+// 	break;
+// case 10:
+// 	num = num + -3;
+// 	count = count + num++;
+// 	break;
+// case 2:
+// 	--num;
+// case 5:
+// 	return (1 << num);
+// default:
+// 	num = num & 1 ? num + 1 : num;
+// }
+// }
+// int main()
+// {
+// 	int start = 0;
+// 	int answer = process(start);
+// 	printf("answer==%d\n", answer);
+// 	return 0;
+// }
 //测试
 //int main()
 //{
@@ -508,77 +495,3 @@ int main()
 //	num = num ^ 99 ^ 88 ^ 99 ^ 88 | 10;
 //	printf("%d", num);
 //}
-
-
-//5
-//typedef struct str {
-//	short e1;
-//	char e2;
-//	char e3[6];
-//	double e5;
-//	int e6;
-//}str;
-//typedef union uni {
-//	short e1;
-//	char e2;
-//	char e3[6];
-//	struct str e4;
-//	double e5;
-//	int e6;
-//}uni;
-//int main() {
-//	int x = sizeof(str);
-//	int y = sizeof(uni);
-//
-//	printf("x=%d,y=%d\n",x, y);
-//	printf("hello=%d\n", printf("3G=%d\n", --x == 23 && x-- == 22 && ++y == 9));
-//	printf("x1=%d,y1=%d\n", x, y);
-//	return 0;
-//}
-//
-//6
-//#define SQR(x) x*x
-//int main()
-//{
-//	int i = 1, j = 2;
-//
-//	printf("%d\n", SQR(i + j));
-//}
-//7
-//int main()
-//{
-//	int nums[2][5] = { {2,4,6,8,10},{12,14,16,18,20} };
-//	int *ptr1 = (int*)(&nums + 1);
-//	int *ptr2 = (int*)(&nums[0] + 1);
-//
-//	printf("*nums[0][4]+1=%d\n", nums[0][4] + 1);
-//	printf("*(nums[0])+1=%d\n", *(nums[0]) + 1);
-//
-//	printf("*nums[0]+1=%d\n", *(nums[0] + 1));
-//	printf("*nums[1]+1=%d\n", *(nums[1] + 1));
-//	printf("*(nums+1)=%d\n", *(nums + 1));
-//
-//	printf("*(ptr2-1)=%d\n", *(ptr2 - 1));
-//	printf("*(ptr-1)=%d\n", *(ptr1 - 1));
-//	
-//	return 0;
-//}
-//8
-//int main()
-//{
-//	int a[3][4] = { {1,2,3,4},{3,4,5,6},{5,6,7,8,} };
-//	int i;
-//	int(*p)[4] = a, * q = a[0];
-//
-//	for (i = 0; i < 3; i++) {
-//		if (i == 0)
-//			(*p)[i + i / 2] = *q + 1;
-//		else
-//			p++, ++q;
-//	}
-//	for (i = 0; i < 3; i++) {
-//		printf("a[%d][%d]=%d\n",i, i, a[i][i]);
-//	}
-//	printf("%d,%d\n", *((int*)p), *q);
-//}
-//9
