@@ -1,0 +1,54 @@
+// int removeDuplicates(int* nums, int numsSize){
+//     int count=0;
+//     for(int i=0;i<numsSize-1;i++)
+//     {
+//         if(nums[i]==nums[i+1])
+//         count++;
+//         nums[i+1-count]=nums[i+1];
+//     }
+//     numsSize-=count;
+//     return numsSize;
+// }
+// int removeElement(int* nums, int numsSize, int val) {
+//     int len = 0;
+//     int dex = 0;  
+//     for (int i = 0; i < numsSize; i++)
+//     {
+//         if (nums[i] != val)
+//         {
+//             nums[dex++] = nums[i];
+//             len++;
+//         } 
+//     }
+//     return len;
+// }
+// int strStr(char* haystack, char* needle) {
+//        int i=0,j=0,len=strlen(haystack),len1=strlen(needle);
+//     while(i<len&&j<len1)
+//     {
+//         if(haystack[i]==needle[j])
+//         {
+//             i++;
+//             j++;
+//         }
+//         else
+//         {
+//             i=i-j+1;
+//             j=0;
+//         }
+//     }
+//     if(j>=len1)
+//     {
+//         return(i-len1);
+//     }
+//     else return -1;
+// }
+// int lengthOfLastWord(char* s) {
+//     int len=0;
+//     for(int str=strlen(s)-1;str>=0;str--){
+//         if(s[str]!=32)  len += 1;
+//         if(s[str]==32 && len!=0)
+//         return len;
+//     }
+//     return len;
+// }
