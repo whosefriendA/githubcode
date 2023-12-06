@@ -14,6 +14,7 @@ void strbuf_swap(struct strbuf *a, struct strbuf *b);
 char *strbuf_detach(struct strbuf *sb, size_t *sz);
 int strbuf_cmp(const struct strbuf *first, const struct strbuf *second);
 void strbuf_reset(struct strbuf *sb);
+
 //PARTB:B的函数原型
 void strbuf_grow(struct strbuf *sb, size_t extra);
 void strbuf_add(struct strbuf *sb, const void *data, size_t len);
@@ -23,10 +24,12 @@ void strbuf_addbuf(struct strbuf *sb, const struct strbuf *sb2);
 void strbuf_setlen(struct strbuf *sb, size_t len);
 size_t strbuf_avail(const struct strbuf *sb);
 void strbuf_insert(struct strbuf *sb, size_t pos, const void *data, size_t len);
+
 //PART:C的函数原型
 void strbuf_ltrim(struct strbuf *sb);
 void strbuf_rtrim(struct strbuf *sb);
 void strbuf_remove(struct strbuf *sb, size_t pos, size_t len);
+
 //PART:D的函数原型
 ssize_t strbuf_read(struct strbuf *sb, int fd, size_t hint);
 int strbuf_getline(struct strbuf *sb, FILE *fp);
