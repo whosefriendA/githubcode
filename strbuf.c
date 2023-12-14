@@ -8,13 +8,9 @@ void strbuf_init(struct strbuf *sb,size_t alloc){
 }
 //填充
 void strbuf_attach(struct strbuf *sb, void *str, size_t len, size_t alloc){
-    if(sb->alloc<(sb->len+len+1)){
-        sb->alloc*=2;
-        sb->buf=(char*)realloc(sb->buf,sb->alloc);
-    }
-    memcpy(sb->buf+sb->len,str,len);
-    sb->len+=len;
-    sb->buf[sb->len]='\0';
+   sb->len=len;
+   sb->alloc=alloc;
+   sb->buf=(char*)str;
 }
 //释放
 void strbuf_release(struct strbuf *sb){
@@ -77,13 +73,16 @@ void strbuf_grow(struct strbuf *sb, size_t extra){
 }
 //追加长度为len的数据
 void strbuf_add(struct strbuf *sb, const void *data, size_t len){
-    if(sb->alloc<sb->len+len)
-    while(sb->alloc<sb->len+len){
-        sb->buf=(char*)realloc(sb->buf,2*sb->alloc);
-        sb->alloc*=2;
+    if(sb->buf==NULL){
+    sb->len=len;
+    sb->alloc=len+1;
+    sb->buf=(char*)malloc(sb->alloc);
     }
+    else {strbuf_grow(sb,len+1);
     memcpy(sb->buf+sb->len,data,len);
     sb->len+=len;
+    sb->buf[sb->len]='\0';
+    }
 }
 //追加一个字符
 void strbuf_addch(struct strbuf *sb, int c){
@@ -97,13 +96,7 @@ void strbuf_addch(struct strbuf *sb, int c){
 }
 //追加一个字符串
 void strbuf_addstr(struct strbuf *sb, const char *s){
-    if(sb->alloc<sb->len+strlen(s)+1)
-    while(sb->alloc<sb->len+strlen(s)+1){
-        sb->buf=(char*)realloc(sb->buf,2*sb->alloc);
-        sb->alloc*=2;
-    }
-    strcat(sb->buf,s);
-    sb->len+=strlen(s)+1;
+     strbuf_add(sb,s,strlen(s));
 }
 //向一个strbuf添加另一个strbuf的数据
 void strbuf_addbuf(struct strbuf *sb, const struct strbuf *sb2){
@@ -114,6 +107,7 @@ void strbuf_addbuf(struct strbuf *sb, const struct strbuf *sb2){
     }
     memcpy(sb->buf+sb->len,sb2->buf,sb2->len);
     sb->len+=sb2->len;
+    sb->buf[sb->len]='\0';
 }
 //设置字符串长度
 void strbuf_setlen(struct strbuf *sb, size_t len){
@@ -124,7 +118,7 @@ void strbuf_setlen(struct strbuf *sb, size_t len){
 }
 //计算 sb 目前仍可以向后追加的字符串长度
 size_t strbuf_avail(const struct strbuf *sb){
-    return sb->alloc-sb->len;
+    return sb->alloc-sb->len-1;
 }
 //向 sb 内存坐标为 pos 位置插入长度为 len 的数据 data
 void strbuf_insert(struct strbuf *sb, size_t pos, const void *data, size_t len){
@@ -155,11 +149,10 @@ void strbuf_ltrim(struct strbuf *sb){
 }
 //去除 sb 缓冲区右端的所有 空格，tab, '\t'
 void strbuf_rtrim(struct strbuf *sb){
-    int i=sb->len-1;
-    while(sb->buf[i]==' '||sb->buf[i]=='\t')
-    i--;
-    sb->buf[i]='\0';
-    sb->len=i;
+    while (sb->buf[sb->len - 1] == ' ' || sb->buf[sb->len - 1] == '\t'){
+        sb->buf[sb->len] = '\0';
+        sb->len-=1;
+    }
 }
 //删除 sb 缓冲区从 pos 坐标长度为 len 的内容
 void strbuf_remove(struct strbuf *sb, size_t pos, size_t len){
@@ -174,16 +167,10 @@ void strbuf_remove(struct strbuf *sb, size_t pos, size_t len){
 
 //sb 增长hint?hint:8192大小，然后将文件描述符为fd的所有文件内容追加到sb中
 ssize_t strbuf_read(struct strbuf *sb, int fd, size_t hint){
-    size_t newalloc=hint?hint:8192;
-    sb->buf=(char*)realloc(sb->buf,newalloc);
-    sb->alloc=newalloc;
-
-    ssize_t read_bytes;
-    while(read_bytes=read(fd,sb->buf+sb->len,newalloc-sb->len)){
-    sb->len+=read_bytes;
-    if(sb->len==sb->alloc)
-    sb->buf=(char*)realloc(sb->buf,newalloc*2);
-    }
+    strbuf_grow(sb,hint?hint:8192);
+    FILE*fp=fdopen(fd,"r");
+    for(char c;(c=fgetc(fp))!=EOF;strbuf_addch(sb,c));
+    return sb->len;
 }
 //将文件句柄为 fp 的一行内容（抛弃换行符）读取到 sb
 int strbuf_getline(struct strbuf *sb, FILE *fp){
@@ -200,4 +187,40 @@ int strbuf_getline(struct strbuf *sb, FILE *fp){
     }
     sb->buf[sb->len] = '\0';
     return 0;
+}
+//challenge
+
+//1.
+struct strbuf **strbuf_split_buf(const char *str, size_t len, int terminator, int max) {
+    struct strbuf **psb = (struct strbuf **) malloc(sizeof(struct strbuf *) * (max + 1));
+    for (int dex = 0, flag = 0, n = 0; dex <= len && n < max; dex++) {
+        while (str[flag] == terminator) 
+        dex = flag++ + 2;
+        if (dex == len || dex > flag && str[dex] == terminator) {
+            psb[n] = (struct strbuf *) malloc(sizeof(struct strbuf));
+
+            strbuf_init(psb[n], 0);
+            strbuf_add(psb[n], str + flag, dex - flag);
+
+            while (str[dex] == terminator) flag = dex++;
+            psb[++n] = NULL;
+        }
+    }
+    return psb;
+}
+
+//2.
+bool strbuf_begin_judge(char* target_str, const char* str, int strnlen){
+   if(str==NULL)
+   return true;
+    return !strncmp(target_str,str,strlen(str));
+}
+
+//3.
+char* strbuf_get_mid_buf(char* target_buf, int begin, int end, int len){
+    if(target_buf==NULL||begin<0||end<=begin||end>len)
+    return NULL;
+    char* new_buf=(char*)malloc(end-begin+1);
+    memcpy(new_buf,target_buf,end-begin);
+    new_buf[len]='\0';
 }
