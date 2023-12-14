@@ -218,9 +218,10 @@ bool strbuf_begin_judge(char* target_str, const char* str, int strnlen){
 
 //3.
 char* strbuf_get_mid_buf(char* target_buf, int begin, int end, int len){
-    if(target_buf==NULL||begin<0||end<=begin||end>len)
+    if(target_buf==NULL||begin<0||end<begin||end>len)
     return NULL;
-    char* new_buf=(char*)malloc(end-begin+1);
-    memcpy(new_buf,target_buf,end-begin);
-    new_buf[len]='\0';
+    char* new_buf=(char*)malloc(end-begin+2);
+    memcpy(new_buf,target_buf+begin,end-begin);
+    new_buf[end-begin]='\0';
+    return new_buf;
 }
