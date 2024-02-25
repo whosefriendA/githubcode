@@ -1,32 +1,26 @@
 #include<stdio.h>
-#include<sys/types.h>
-#include<dirent.h>
 #include<stdlib.h>
-void ls(char[]);
-int main(int argc,char** argv)
+#include<string.h>
+#include<time.h>
+#include<sys/stat.h>
+#include<unistd.h>
+#include<sys/types.h>
+#include<limits.h>
+#include<dirent.h>
+#include<grp.h>
+#include<pwd.h>
+#include<errno.h>
+#include<stdlib.h>
+bool para_a = false;
+bool para_l = false;
+bool para_t = false;
+bool para_r = false;
+bool para_R = false;
+bool para_i = false;
+bool para_s = false;
+struct fileinfo
 {
-    if(argc==1) ls(".";)
-    else{
-while(--argc){
-    printf("%s : \n",*++argv)
-    ls(*argv);
-}
-}
-}
-void ls(char dirname[])
-{
-    DIR *dir_ptr;
-    struct dirent *direntp;
-    if((dir_ptr=opendir(dirname))==NULL){
-        fprintf(stderr,"ls1: Canot open %s\n",dirname);
-    }else{
-        while((direntp =readdir(dir_ptr)) !=NULL){
-            printf("%s\n",direntp ->d_name);
-        }
-        int flag;
-        if((flag =closedir(dir_ptr))==-1){
-            perror("ls1:Cannot close dir");
-            exit(0);
-        }
-    }
-}
+    char name[257];
+    struct stat *stat;
+};
+void do_ls(char *dirname);
