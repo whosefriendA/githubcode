@@ -12,7 +12,6 @@
 #include<errno.h>
 #include<getopt.h>
 #include <stdbool.h>
-#define MAX_NAME 257
 bool para_a = false;
 bool para_l = false;
 bool para_t = false;
@@ -20,17 +19,17 @@ bool para_r = false;
 bool para_R = false;
 bool para_i = false;
 bool para_s = false;
-typedef struct 
+typedef struct
 {
-    char *filename;
+    char* filename;
     struct stat istat;
 }Fileinfo;
-void print_filename(char *filename, mode_t filemode);
+void print_filename(char* filename, mode_t filemode);
 void print_fileinfo(Fileinfo fileinfo);
-int compare(const void *a, const void *b);
-int compare_ct(const void *a, const void *b);
-void do_ls(char *dirname);
-int main(int argc, char *argv[])
+int compare(const void* a, const void* b);
+int compare_ct(const void* a, const void* b);
+void do_ls(char* dirname);
+int main(int argc, char* argv[])
 {
     char opt;
     while ((opt = getopt(argc, argv, "alisRrt")) != -1)
@@ -77,29 +76,29 @@ int main(int argc, char *argv[])
 
     return 0;
 }
-int compare(const void *a, const void *b)
+int compare(const void* a, const void* b)
 {
-    Fileinfo *A = (Fileinfo *)a;
-    Fileinfo *B = (Fileinfo *)b;
+    Fileinfo* A = (Fileinfo*)a;
+    Fileinfo* B = (Fileinfo*)b;
     return strcmp(A->filename, B->filename);
 }
 
-int compare_ct(const void *a, const void *b)
+int compare_ct(const void* a, const void* b)
 {
-    Fileinfo *A = (Fileinfo *)a;
-    Fileinfo *B = (Fileinfo *)b;
+    Fileinfo* A = (Fileinfo*)a;
+    Fileinfo* B = (Fileinfo*)b;
     return A->istat.st_mtime - B->istat.st_mtime;
 }
-void print_filename(char *filename, mode_t filemode)
+void print_filename(char* filename, mode_t filemode)
 {
     if (S_ISDIR(filemode))
         printf("\033[01;34m%s\033[0m", filename);
     else if (S_ISLNK(filemode))
         printf("\033[30;42m%s\033[0m", filename);
     else if (S_ISCHR(filemode))
-        printf("\033[40;33m%s\033[0m", filename);
+        printf("\033[40;32m%s\033[0m", filename);
     else if (S_ISBLK(filemode))
-        printf("\033[40;33m%s\033[0m", filename);
+        printf("\033[40;32m%s\033[0m", filename);
     else if (S_ISREG(filemode))
     {
         if (filemode & S_IXUSR || filemode & S_IXGRP || filemode & S_IXOTH)
@@ -110,9 +109,9 @@ void print_filename(char *filename, mode_t filemode)
     else
         printf("%s", filename);
 }
-void do_ls(char *dirname)
+void do_ls(char* dirname)
 {
-    Fileinfo *fileinfo = malloc(sizeof(Fileinfo) * 1000);
+    Fileinfo* fileinfo = malloc(sizeof(Fileinfo) * 1000);
     if (fileinfo == NULL)
     {
         perror("Fail to alloc");
@@ -120,8 +119,8 @@ void do_ls(char *dirname)
     }//动态分配内存
 
     int file_cnt = 0;
-    DIR *dir_ptr;
-    struct dirent *cur_dirent;
+    DIR* dir_ptr;
+    struct dirent* cur_dirent;
     if ((dir_ptr = opendir(dirname)) == NULL)
     {
         perror("Fail to opendir");
@@ -133,7 +132,7 @@ void do_ls(char *dirname)
         {
             if (!para_a && cur_dirent->d_name[0] == '.')
                 continue;
-            char *pst = strdup(cur_dirent->d_name); 
+            char* pst = strdup(cur_dirent->d_name);
             if (pst == NULL)
             {
                 perror("Fail to alloc");
@@ -182,7 +181,7 @@ void do_ls(char *dirname)
             {
                 if (strcmp(fileinfo[i].filename, ".") != 0 && strcmp(fileinfo[i].filename, "..") != 0)
                 {
-                    char pathname[1000];
+                    char pathname[257];
                     snprintf(pathname, sizeof(pathname), "%s/%s", dirname, fileinfo[i].filename);
                     printf("\n%s:\n", pathname);
                     do_ls(pathname);
@@ -203,12 +202,8 @@ void do_ls(char *dirname)
 
 void print_fileinfo(const Fileinfo fileinfo)
 {
-    if (para_i)
-        printf("%-8lu ", fileinfo.istat.st_ino);
-    if (para_s)
-        printf("%-8ld ", (long)fileinfo.istat.st_size);
     if (para_l)
-    {   
+    {
         printf((S_ISDIR(fileinfo.istat.st_mode)) ? "d" : "-");
         printf((fileinfo.istat.st_mode & S_IRUSR) ? "r" : "-");
         printf((fileinfo.istat.st_mode & S_IWUSR) ? "w" : "-");
@@ -219,20 +214,25 @@ void print_fileinfo(const Fileinfo fileinfo)
         printf((fileinfo.istat.st_mode & S_IROTH) ? "r" : "-");
         printf((fileinfo.istat.st_mode & S_IWOTH) ? "w" : "-");
         printf((fileinfo.istat.st_mode & S_IXOTH) ? "x" : "-");
-        
+
 
         printf("%-2d ", (int)fileinfo.istat.st_nlink); // 打印链接数
 
-        struct passwd *user = getpwuid(fileinfo.istat.st_uid);
+        struct passwd* user = getpwuid(fileinfo.istat.st_uid);
         printf("%s ", user->pw_name); // 打印用户名
 
-        struct group *gp = getgrgid(fileinfo.istat.st_gid);
+        struct group* gp = getgrgid(fileinfo.istat.st_gid);
         printf("%s ", gp->gr_name); // 打印组名
 
         printf("%-10ld ", fileinfo.istat.st_size); // 打印文件大小
 
         printf("%.12s ", ctime(&fileinfo.istat.st_mtime) + 4); // 打印时间
     }
+    if (para_i)
+        printf("%-8lu ", fileinfo.istat.st_ino);
+    if (para_s)
+        printf("%-8ld ", (long)fileinfo.istat.st_blocks/2);
+    
     print_filename(fileinfo.filename, fileinfo.istat.st_mode);
     printf("\n");
 }
