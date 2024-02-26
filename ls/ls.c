@@ -112,20 +112,19 @@ void print_filename(char *filename, mode_t filemode)
 }
 void do_ls(char *dirname)
 {
-    // 动态分配内存
     Fileinfo *fileinfo = malloc(sizeof(Fileinfo) * 1000);
     if (fileinfo == NULL)
     {
-        perror("内存分配失败");
+        perror("Fail to alloc");
         exit(EXIT_FAILURE);
-    }
+    }//动态分配内存
 
     int file_cnt = 0;
     DIR *dir_ptr;
     struct dirent *cur_dirent;
     if ((dir_ptr = opendir(dirname)) == NULL)
     {
-        perror("打开文件夹失败");
+        perror("Fail to opendir");
         exit(EXIT_FAILURE);
     }
     else
@@ -134,30 +133,28 @@ void do_ls(char *dirname)
         {
             if (!para_a && cur_dirent->d_name[0] == '.')
                 continue;
-            char *pst = strdup(cur_dirent->d_name); // 使用 strdup 分配内存
+            char *pst = strdup(cur_dirent->d_name); 
             if (pst == NULL)
             {
-                perror("动态内存分配失败");
+                perror("Fail to alloc");
                 exit(EXIT_FAILURE);
             }
             fileinfo[file_cnt++].filename = pst;
         }
     }
 
-    // 存储信息
     for (int i = 0; i < file_cnt; i++)
     {
         char pathname[1000];
-        snprintf(pathname, sizeof(pathname), "%s/%s", dirname, fileinfo[i].filename); // 使用 snprintf 避免缓冲区溢出
+        snprintf(pathname, sizeof(pathname), "%s/%s", dirname, fileinfo[i].filename);
         if (lstat(pathname, &fileinfo[i].istat) == -1)
         {
-            perror("获取信息失败");
+            perror("Fail to get the information");
             exit(EXIT_FAILURE);
             continue;
         }
     }
 
-    // 排序
     if (para_t)
         qsort(fileinfo, file_cnt, sizeof(Fileinfo), compare_ct);
     else
@@ -171,9 +168,8 @@ void do_ls(char *dirname)
             fileinfo[left++] = fileinfo[right];
             fileinfo[right--] = temp;
         }
-    }
+    }//排序
 
-    // 打印信息
     for (int i = 0; i < file_cnt; i++)
     {
         print_fileinfo(fileinfo[i]);
@@ -193,15 +189,14 @@ void do_ls(char *dirname)
                 }
             }
         }
-    }
+    }//调用打印函数
 
-    // 释放内存
     for (int i = 0; i < file_cnt; ++i)
     {
         free(fileinfo[i].filename);
         fileinfo[i].filename = NULL;
     }
-    free(fileinfo);
+    free(fileinfo);//内存释放
 
     closedir(dir_ptr);
 }
@@ -214,7 +209,7 @@ void print_fileinfo(const Fileinfo fileinfo)
         printf("%-8ld ", (long)fileinfo.istat.st_size);
     if (para_l)
     {   
-        printf((S_ISDIR(fileinfo.istat.st_mode)) ? "d" : "-");//有哪些权限输出哪些
+        printf((S_ISDIR(fileinfo.istat.st_mode)) ? "d" : "-");
         printf((fileinfo.istat.st_mode & S_IRUSR) ? "r" : "-");
         printf((fileinfo.istat.st_mode & S_IWUSR) ? "w" : "-");
         printf((fileinfo.istat.st_mode & S_IXUSR) ? "x" : "-");
