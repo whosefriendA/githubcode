@@ -144,7 +144,7 @@ void do_ls(char* dirname)
 
     for (int i = 0; i < file_cnt; i++)
     {
-        char pathname[1000];
+        char pathname[257];
         snprintf(pathname, sizeof(pathname), "%s/%s", dirname, fileinfo[i].filename);
         if (lstat(pathname, &fileinfo[i].istat) == -1)
         {
@@ -178,11 +178,13 @@ void do_ls(char* dirname)
         for (int i = 0; i < file_cnt; i++)
         {
             if (S_ISDIR(fileinfo[i].istat.st_mode))
-            {
+            {    
                 if (strcmp(fileinfo[i].filename, ".") != 0 && strcmp(fileinfo[i].filename, "..") != 0)
                 {
                     char pathname[257];
                     snprintf(pathname, sizeof(pathname), "%s/%s", dirname, fileinfo[i].filename);
+                    if(fileinfo[i].filename =="/proc/1697/map_files")
+                    continue;
                     printf("\n%s:\n", pathname);
                     do_ls(pathname);
                 }
@@ -214,7 +216,6 @@ void print_fileinfo(const Fileinfo fileinfo)
         printf((fileinfo.istat.st_mode & S_IROTH) ? "r" : "-");
         printf((fileinfo.istat.st_mode & S_IWOTH) ? "w" : "-");
         printf((fileinfo.istat.st_mode & S_IXOTH) ? "x" : "-");
-
 
         printf("%-2d ", (int)fileinfo.istat.st_nlink); // 打印链接数
 
