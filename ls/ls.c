@@ -1,17 +1,15 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-#include<time.h>
-#include<sys/stat.h>
-#include<unistd.h>
-#include<sys/types.h>
-#include<limits.h>
-#include<dirent.h>
-#include<grp.h>
-#include<pwd.h>
-#include<errno.h>
-#include<getopt.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <time.h>
+#include <pwd.h>
+#include <grp.h>
 #include <stdbool.h>
+#define MAX_PATH 2000
 bool para_a = false;
 bool para_l = false;
 bool para_t = false;
@@ -26,6 +24,7 @@ typedef struct
 }Fileinfo;
 void print_filename(char* filename, mode_t filemode);
 void print_fileinfo(Fileinfo fileinfo);
+void mode_to_letters(mode_t num, char *mode);
 int compare(const void* a, const void* b);
 int compare_ct(const void* a, const void* b);
 void do_ls(char* dirname);
@@ -121,6 +120,7 @@ void do_ls(char* dirname)
     int file_cnt = 0;
     DIR* dir_ptr;
     struct dirent* cur_dirent;
+
     if ((dir_ptr = opendir(dirname)) == NULL)
     {
         perror("Fail to opendir");
@@ -128,27 +128,30 @@ void do_ls(char* dirname)
     }
     else
     {
-        while ((cur_dirent = readdir(dir_ptr)) != NULL)
+        while ((cur_dirent = readdir(dir_ptr)) != NULL )
         {
             if (!para_a && cur_dirent->d_name[0] == '.')
                 continue;
+            
             char* pst = strdup(cur_dirent->d_name);
             if (pst == NULL)
             {
                 perror("Fail to alloc");
                 exit(EXIT_FAILURE);
             }
+           
             fileinfo[file_cnt++].filename = pst;
         }
     }
 
     for (int i = 0; i < file_cnt; i++)
     {
-        char pathname[257];
+        char pathname[MAX_PATH];
         snprintf(pathname, sizeof(pathname), "%s/%s", dirname, fileinfo[i].filename);
-        if (lstat(pathname, &fileinfo[i].istat) == -1)
+
+        if (lstat(pathname, &fileinfo[i].istat) == -1 && pathname!="//proc/1694/map_files")
         {
-            perror("Fail to get the information");
+            perror("获取信息失败");
             exit(EXIT_FAILURE);
             continue;
         }
@@ -170,38 +173,37 @@ void do_ls(char* dirname)
     }//排序
 
     for (int i = 0; i < file_cnt; i++)
-    {
+    {   
         print_fileinfo(fileinfo[i]);
     }
     if (para_R)
     {
         for (int i = 0; i < file_cnt; i++)
-        {
+        {  
             if (S_ISDIR(fileinfo[i].istat.st_mode))
             {    
                 if (strcmp(fileinfo[i].filename, ".") != 0 && strcmp(fileinfo[i].filename, "..") != 0)
-                {
-                    char pathname[257];
+                {  
+                    char pathname[MAX_PATH];
                     snprintf(pathname, sizeof(pathname), "%s/%s", dirname, fileinfo[i].filename);
-                    if(fileinfo[i].filename =="/proc/1697/map_files")
-                    continue;
                     printf("\n%s:\n", pathname);
                     do_ls(pathname);
                 }
             }
         }
     }//调用打印函数
-
+    
     for (int i = 0; i < file_cnt; ++i)
     {
         free(fileinfo[i].filename);
+        if(fileinfo[i].filename!=NULL)
         fileinfo[i].filename = NULL;
     }
+    if(fileinfo!=NULL)
     free(fileinfo);//内存释放
 
     closedir(dir_ptr);
 }
-
 void print_fileinfo(const Fileinfo fileinfo)
 {
     if (para_l)
