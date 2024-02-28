@@ -10,6 +10,7 @@
 #include <grp.h>
 #include <stdbool.h>
 #include <getopt.h>
+#define MAX_PATH 500
 //信息结构体
 typedef struct
 {
@@ -85,9 +86,9 @@ void print_filename(char *filename, mode_t filemode)
     if (S_ISDIR(filemode))
         printf("\033[01;32m%s\033[0m", filename);
     else if (S_ISCHR(filemode))
-        printf("\033[40;33m%s\033[0m", filename);
+        printf("\033[40;34m%s\033[0m", filename);
     else if (S_ISBLK(filemode))
-        printf("\033[40;33m%s\033[0m", filename);
+        printf("\033[40;34m%s\033[0m", filename);
     else if (S_ISLNK(filemode))
         printf("\033[30;42m%s\033[0m", filename);
     else if (S_ISREG(filemode))
@@ -137,7 +138,7 @@ void do_ls(char *dirname)
 
     for (int i = 0; i < file_cnt; i++)
     {
-        char pathname[1000];
+        char pathname[MAX_PATH];
         snprintf(pathname, sizeof(pathname), "%s/%s", dirname, fileinfo[i].filename); // 使用 snprintf 避免缓冲区溢出
         if (lstat(pathname, &fileinfo[i].info) == -1)
         {
@@ -174,7 +175,7 @@ void do_ls(char *dirname)
             {
                 if (strcmp(fileinfo[i].filename, ".") != 0 && strcmp(fileinfo[i].filename, "..") != 0)
                 {
-                    char pathname[1000];
+                    char pathname[MAX_PATH];
                     snprintf(pathname, sizeof(pathname), "%s/%s", dirname, fileinfo[i].filename);
                     printf("\n%s:\n", pathname);
                     do_ls(pathname);
