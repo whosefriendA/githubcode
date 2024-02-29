@@ -6,6 +6,7 @@ struct Listnode{
       struct ListNode *next;
  };
  struct Listnode* end_get_node(struct Listnode*p);
+ 
 int main()
 {
     struct Listnode *head=(struct Listnode*)malloc(sizeof(struct Listnode));
@@ -20,6 +21,7 @@ int main()
     }
 return 0;
 }
+
 struct Listnode* end_get_node(struct Listnode*p)
 {
     struct Listnode *s=(struct Listnode*)malloc(sizeof(struct Listnode));
