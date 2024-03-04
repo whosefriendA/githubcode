@@ -32,3 +32,19 @@ struct Listnode* end_get_node(struct Listnode*p)
     p=s;
 }
 //双向循环链表
+typedef struct DulNode
+{
+    int data;
+    struct DulNode *prior;
+    struct DulNode *next;
+}DulNode,*DulinkList;
+//插入
+/* 把s插入m和m后面结点之间
+s->next=m->next;
+s->prior=m;
+m->next->prior=s;
+m->next=s;  */
+//删除p结点
+/* p->prior->next=p->next;
+p->next->prior=p->prior;
+free(p;)*/
