@@ -48,3 +48,26 @@ m->next=s;  */
 /* p->prior->next=p->next;
 p->next->prior=p->prior;
 free(p;)*/
+
+// int partsort(int *a,int begin,int end){
+//     int key=begin;
+//     int left=begin;
+//     int right=end;
+//     while(left<right)
+//     {
+//         while(left<right&&a[right]>=a[key])
+//         right--;
+//         while(left<right&&a[left]<=a[key])
+//         left++;
+//         int meet=left;
+//         swap(&a[meet],&a[key]);
+//         return meet;
+//     }
+// }
+// void quicksort(int*a,int begin,int end){
+//     if(begin>=end)
+//     return;
+//     int meet=partsort(a,begin,end);
+//     quicksort(a,begin,meet-1);
+//     quicksort(a,meet+1,end);
+// }
