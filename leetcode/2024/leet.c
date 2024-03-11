@@ -58,3 +58,22 @@ struct ListNode* reverseList(struct ListNode* head) {
     }
     return pre;
 }
+char* capitalizeTitle(char* title) {
+
+    int len = strlen(title);
+    int left = 0, right = 0;
+    while (right <= len) {
+        if (title[right] == ' ' || title[right] == '\0') {
+            int length = right - left;
+            if (length > 2) {
+                title[left] = toupper(title[left]);
+            }
+            left=right+1;
+            right=left;
+        } else {
+            title[right] = tolower(title[right]);
+            right++;
+        }
+    }
+    return title;
+}
