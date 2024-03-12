@@ -10,7 +10,7 @@
 #include <grp.h>
 #include <stdbool.h>
 #include <getopt.h>
-#define MAX_PATH 4096
+#define MAX_PATH 1000
 //信息结构体
 typedef struct
 {
@@ -200,6 +200,7 @@ int compare(const void *a, const void *b)
     Fileinfo *_b = (Fileinfo *)b;
     return strcmp(_a->filename, _b->filename);
 }
+
 void print_fileinfo(const Fileinfo fileinfo)
 {
     if (para_l)
